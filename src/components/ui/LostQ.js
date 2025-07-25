@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './LostQ.css';
-import logo from '../Images/Mwader.png';
+import logo from '../../assets/images/Mwader.png';
 
 const LostQ = () => {
   const navigate = useNavigate();
