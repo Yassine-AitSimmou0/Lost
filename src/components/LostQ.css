@@ -1,0 +1,57 @@
+/* src/components/LostQ.css */
+.lostq-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #0a0a0a;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+.brand-logo {
+  width: 200px;
+  height: auto;
+  margin-bottom: 30px;
+  animation: fadeInLogo 1.2s ease-in-out forwards;
+  opacity: 0;
+}
+
+@keyframes fadeInLogo {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.question {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+}
+
+.buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  padding: 12px 28px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #dddddd;
+  transform: scale(1.05);
+}

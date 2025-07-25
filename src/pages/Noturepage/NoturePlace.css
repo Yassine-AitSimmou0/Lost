@@ -1,0 +1,19 @@
+.noture-page {
+  background-color: #0f0f0f;
+  height: 100vh;
+  color: #ff4d4d;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.noture-logo {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.noture-text {
+  font-size: 2rem;
+  font-weight: bold;
+}
