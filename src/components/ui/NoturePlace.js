@@ -1,6 +1,6 @@
 import React from 'react';
 import './NoturePlace.css';
-import logo from '../Images/Mwader.png'; // Reuse same logo
+import logo from '../../assets/images/Mwader.png'; // Reuse same logo
 
 const NoturePlace = () => {
   return (

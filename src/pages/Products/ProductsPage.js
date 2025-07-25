@@ -1,6 +1,6 @@
 import React from 'react';
 import './ProductsPage.css';
-import Mwader from '../../../assets/images/Mwader.png';
+import logo from '../../assets/images/Mwader.png';
 import { Link } from 'react-router-dom';
 
 const products = [

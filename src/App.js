@@ -1,15 +1,18 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './styles/App.css';
 
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { Header, Footer } from './components';
 
-import HomePage from './pages/Home/HomePage';
-import NoturePage from './pages/Noture/NoturePage';
-import ProductsPage from './pages/Products/ProductsPage';
-import ProductPage from './pages/Product/ProductPage';
-import CartPage from './pages/Cart/CartPage';
-import ContactPage from './pages/Contact/ContactPage';
+import {
+  HomePage,
+  NoturePage,
+  ProductsPage,
+  ProductPage,
+  CartPage,
+  ContactPage,
+  YesPage
+} from './pages';
 
 function App() {
   return (
@@ -22,6 +25,7 @@ function App() {
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/yes" element={<YesPage />} />
       </Routes>
       <Footer />
     </Router>
