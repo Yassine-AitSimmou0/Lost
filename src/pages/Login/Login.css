@@ -67,28 +67,7 @@
   background: #181818;
 }
 
-.login-btn {
-  width: 100%;
-  background: #fff;
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  padding: 14px 0;
-  font-size: 1.1rem;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 2px 12px #0002;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-top: 0.5rem;
-}
-.login-btn:hover {
-  background: #111;
-  color: #fff;
-  box-shadow: 0 4px 24px #0004;
-  transform: translateY(-2px) scale(1.03);
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
 .login-divider {
   width: 100%;

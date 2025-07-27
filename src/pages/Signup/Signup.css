@@ -128,12 +128,7 @@
   overflow: hidden;
 }
 
-.signup-btn:hover:not(:disabled) {
-  background: #111;
-  color: #fff;
-  box-shadow: 0 4px 24px #0004;
-  transform: translateY(-2px) scale(1.03);
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
 .signup-btn:disabled {
   cursor: not-allowed;

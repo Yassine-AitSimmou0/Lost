@@ -109,35 +109,67 @@ const LostQ = () => {
   };
 
   return (
-    <div className={`lostq-container${fadeOut ? ' fade-out' : ''}`} style={{ position: 'relative', transition: 'opacity 1.3s cubic-bezier(0.4,0,0.2,1)' }}>
+    <div className={`min-h-screen bg-gradient-to-br from-black via-gray-900 to-gray-800 flex flex-col items-center justify-center relative overflow-hidden ${fadeOut ? 'fade-out' : ''}`} style={{ transition: 'opacity 1.3s cubic-bezier(0.4,0,0.2,1)' }}>
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/5 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gray-300/10 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute top-40 left-40 w-80 h-80 bg-white/5 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
       {/* Show header with logo hidden only during animation */}
       {showHeader && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          background: '#111',
-          display: 'flex',
-          alignItems: 'center',
-          padding: '15px 30px',
-          borderBottom: '1px solid #333',
-          zIndex: 1000
-        }}>
-          <img ref={headerTargetRef} src={logo} alt="Header Target" style={{ width: 50, height: 'auto', transition: 'opacity 0.2s', opacity: 1 }} />
+        <div className="fixed top-0 left-0 w-full bg-black/95 backdrop-blur-sm border-b border-gray-800 flex items-center px-8 py-4 z-50">
+          <img ref={headerTargetRef} src={logo} alt="Header Target" className="w-12 h-auto transition-opacity duration-200 opacity-100" />
         </div>
       )}
-      <img
-        ref={logoRef}
-        src={logo}
-        alt="Lost Logo"
-        className="brand-logo"
-        style={{ zIndex: 10 }}
-      />
-      <h1 className="question">Are you Lost?</h1>
-      <div className="buttons">
-        <button className="btn" onClick={handleYes} disabled={animating}>Yes</button>
-        <button className="btn" onClick={handleNo} disabled={animating}>No</button>
+
+      {/* Main content */}
+      <div className="relative z-10 text-center px-6">
+        <img
+          ref={logoRef}
+          src={logo}
+          alt="Lost Logo"
+          className="w-32 h-32 md:w-40 md:h-40 mx-auto mb-8 drop-shadow-2xl animate-pulse"
+          style={{ zIndex: 10 }}
+        />
+        
+        <h1 className="text-4xl md:text-6xl font-bold text-white mb-12 tracking-wider animate-fade-in">
+          Are you <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">Lost</span>?
+        </h1>
+        
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <button 
+            className="px-12 py-4 bg-white hover:bg-gray-100 text-black font-semibold rounded-full text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={handleYes} 
+            disabled={animating}
+          >
+            Yes
+          </button>
+          <button 
+            className="px-12 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-semibold rounded-full text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed" 
+            onClick={handleNo} 
+            disabled={animating}
+          >
+            No
+          </button>
+        </div>
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-float"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 3}s`,
+              animationDuration: `${3 + Math.random() * 2}s`
+            }}
+          />
+        ))}
       </div>
     </div>
   );

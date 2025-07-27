@@ -57,27 +57,9 @@
   z-index: 1;
 }
 
-.btn {
-  padding: 16px 40px;
-  font-size: 1.4rem;
-  border: none;
-  border-radius: 12px;
-  background: #fff;
-  color: #111;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 16px #fff2;
-  transition: background 0.3s, color 0.3s, transform 0.2s, box-shadow 0.3s;
-  outline: none;
-  filter: grayscale(1);
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
-.btn:hover {
-  background: #111;
-  color: #fff;
-  transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 4px 32px #fff6;
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
 .fade-out {
   opacity: 0;
@@ -96,10 +78,7 @@ body {
   .question {
     font-size: 2rem;
   }
-  .btn {
-    font-size: 1.1rem;
-    padding: 12px 20px;
-  }
+  /* Removed conflicting button styles - using Tailwind classes instead */
 }
 
 @media (max-width: 600px) {
@@ -121,9 +100,5 @@ body {
     width: 100%;
     align-items: center;
   }
-  .btn {
-    width: 100%;
-    font-size: 1rem;
-    padding: 10px 0;
-  }
+  /* Removed conflicting button styles - using Tailwind classes instead */
 }

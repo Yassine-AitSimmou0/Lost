@@ -97,24 +97,7 @@
   text-align: center;
 }
 
-.buy-btn {
-  background: #fff;
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 24px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 12px #0002;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-}
-.buy-btn:hover {
-  background: #111;
-  color: #fff;
-  box-shadow: 0 4px 24px #0004;
-  transform: translateY(-2px) scale(1.03);
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
 @media (max-width: 900px) {
   .yespage-content {
@@ -345,26 +328,7 @@
   text-transform: uppercase;
 }
 
-.urban-btn {
-  background: #fff;
-  color: #111;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 32px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 2px 12px #0002;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.1s;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.urban-btn:hover {
-  background: #111;
-  color: #fff;
-  box-shadow: 0 4px 24px #0004;
-  transform: translateY(-2px) scale(1.03);
-}
+/* Removed conflicting button styles - using Tailwind classes instead */
 
 .fadein-yespage {
   opacity: 0;
