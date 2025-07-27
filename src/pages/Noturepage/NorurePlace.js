@@ -1,11 +1,13 @@
 import React from 'react';
-import './NoturePage.css';
-import logo from '../../assets/images/Mwader.png';
+import Mwader from '../../Assets/Images/Mwader.png';
 
 const NoturePage = () => (
-  <div className="noture-page">
-    <img src={logo} alt="Logo" className="noture-logo" />
-    <h2 className="noture-text">Sir t9awed</h2>
+  <div className="noture-animated-bg">
+    <div className="noture-content">
+      <img src={Mwader} alt="Logo" className="noture-logo-anim" />
+      <h1 className="noture-text-anim">Stay Away! </h1>
+      <p className="noture-subtext">(This is not ur place buddy)</p>
+    </div>
   </div>
 );
 

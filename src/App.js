@@ -1,30 +1,88 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './pages/layout/Header';
+import Footer from './pages/layout/Footer';
 
-import HomePage from './pages/Home/HomePage';
-import NoturePage from './pages/Noture/NoturePage';
-import ProductsPage from './pages/Products/ProductsPage';
-import ProductPage from './pages/Product/ProductPage';
+import NoturePage from './pages/Noturepage/NorurePlace';
 import CartPage from './pages/Cart/CartPage';
 import ContactPage from './pages/Contact/ContactPage';
+import LostQ from './pages/LostQ/LostQ';
+import YesPage from './pages/Home/YesPage/YesPage';
+import Login from './pages/Login/Login';
+import Signup from './pages/Signup/Signup';
+import { Navigate } from 'react-router-dom';
 
-function App() {
+// Context to control header logo visibility
+export const LogoAnimationContext = createContext({ hideLogo: false, setHideLogo: () => {} });
+
+// Cart context for global cart state
+export const CartContext = createContext();
+
+function CartProvider({ children }) {
+  const [cart, setCart] = useState(() => {
+    try {
+      const stored = localStorage.getItem('cart');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+  const addToCart = (product) => setCart((prev) => [...prev, product]);
+  const removeFromCart = (id) => setCart((prev) => prev.filter(p => p.id !== id));
+  // Persist cart to localStorage
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
   return (
-    <Router>
-      <Header />
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+      {children}
+    </CartContext.Provider>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
+  const { hideLogo } = useContext(LogoAnimationContext);
+  const answer = localStorage.getItem('lostq-answered');
+  const isNo = answer === 'no';
+  const isYes = answer === 'yes';
+  // If not answered, always redirect to / (LostQ) except /noture and /login
+  if (!answer && location.pathname !== '/' && location.pathname !== '/noture' && location.pathname !== '/login' && location.pathname !== '/signup') {
+    return <Navigate to="/" replace />;
+  }
+  // If answered no, only allow /noture and /login
+  if (isNo && location.pathname !== '/noture' && location.pathname !== '/login' && location.pathname !== '/signup') {
+    return <Navigate to="/noture" replace />;
+  }
+  // If answered yes, allow all routes
+  return (
+    <>
+      {location.pathname !== '/' && location.pathname !== '/noture' && <Header hideLogo={hideLogo} />}
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<LostQ />} />
+        <Route path="/home" element={<YesPage />} />
         <Route path="/noture" element={<NoturePage />} />
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
-      <Footer />
-    </Router>
+      {location.pathname !== '/' && location.pathname !== '/noture' && <Footer />}
+    </>
+  );
+}
+
+function App() {
+  const [hideLogo, setHideLogo] = useState(false);
+  return (
+    <CartProvider>
+      <LogoAnimationContext.Provider value={{ hideLogo, setHideLogo }}>
+        <Router>
+          <AppRoutes />
+        </Router>
+      </LogoAnimationContext.Provider>
+    </CartProvider>
   );
 }
 

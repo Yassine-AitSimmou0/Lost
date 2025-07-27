@@ -1,19 +1,137 @@
-.noture-page {
-  background-color: #0f0f0f;
-  height: 100vh;
-  color: #ff4d4d;
+.noture-animated-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noture-animated-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 60% 40%, #fff2 0%, transparent 70%),
+              radial-gradient(circle at 30% 70%, #fff1 0%, transparent 80%);
+  animation: notureBgMove 14s linear infinite alternate;
+  z-index: 0;
+  filter: grayscale(1);
+}
+
+@keyframes notureBgMove {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(10%, 10%) scale(1.1); }
+}
+
+.noture-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  width: 100vw;
+  text-align: center;
+  position: relative;
 }
 
-.noture-logo {
-  width: 120px;
-  margin-bottom: 20px;
+.noture-logo-anim {
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 40px auto;
+  filter: grayscale(1);
+  background: #181818;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px #0006;
+  padding: 24px;
+  opacity: 0;
+  transform: translateY(100px) scale(1.15);
+  animation: notureLogoFadeIn 1.8s cubic-bezier(0.4,0,0.2,1) 0.1s forwards;
 }
 
-.noture-text {
-  font-size: 2rem;
+@keyframes notureLogoFadeIn {
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.noture-text-anim {
+  color: #fff;
+  margin-top: 0;
+  font-size: 2.2rem;
   font-weight: bold;
+  letter-spacing: 2px;
+  opacity: 0;
+  text-align: center;
+  filter: grayscale(1);
+  transform: translateY(40px);
+  animation: notureTextFadeIn 1.2s cubic-bezier(0.4,0,0.2,1) 1.1s forwards;
+}
+
+@keyframes notureTextFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.noture-subtext {
+  color: #bbb;
+  font-size: 1.1rem;
+  margin-top: 18px;
+  font-style: italic;
+  letter-spacing: 1px;
+  opacity: 0;
+  text-align: center;
+  transform: translateY(30px);
+  animation: notureSubFadeIn 1.2s cubic-bezier(0.4,0,0.2,1) 1.7s forwards;
+}
+
+@keyframes notureSubFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .noture-logo-anim {
+    width: 120px;
+    height: 120px;
+    padding: 12px;
+    margin-bottom: 28px;
+  }
+  .noture-text-anim {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .noture-content {
+    padding: 8px 2vw;
+  }
+  .noture-logo-anim {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 10px;
+    padding: 6px;
+  }
+  .noture-text-anim {
+    font-size: 1rem;
+    margin-top: 8px;
+  }
+  .noture-subtext {
+    font-size: 0.95rem;
+    margin-top: 8px;
+  }
 }
