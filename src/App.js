@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
 import Header from './pages/layout/Header';
 import Footer from './pages/layout/Footer';
@@ -13,9 +13,9 @@ import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
 import AdminLogin from './pages/Admin/AdminLogin';
 import AdminDashboard from './pages/Admin/AdminDashboard';
+import MaintenancePage from './pages/Maintenance/MaintenancePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AdminProvider } from './context/AdminContext';
-import { Navigate } from 'react-router-dom';
 
 // Context to control header logo visibility
 export const LogoAnimationContext = createContext({ hideLogo: false, setHideLogo: () => {} });
@@ -52,7 +52,10 @@ function AppRoutes() {
   const isNo = answer === 'no';
   const isYes = answer === 'yes';
   
-  // Admin routes don't need the LostQ logic
+  // Check website status from localStorage
+  const websiteOnline = localStorage.getItem('websiteOnline') !== 'false'; // Default to online
+  
+  // Admin routes don't need the LostQ logic and are always accessible
   if (location.pathname.startsWith('/admin')) {
     return (
       <Routes>
@@ -68,6 +71,11 @@ function AppRoutes() {
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
       </Routes>
     );
+  }
+  
+  // If website is offline, show maintenance page for all non-admin routes
+  if (!websiteOnline) {
+    return <MaintenancePage />;
   }
   
   // If not answered, always redirect to / (LostQ) except /noture and /login

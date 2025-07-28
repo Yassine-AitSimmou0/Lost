@@ -33,7 +33,8 @@ const AdminDashboard = () => {
     accountLockout: true,
     sessionTimeoutEnabled: true,
     securityPin: '123456',
-    whatsappNotifications: true
+    whatsappNotifications: true,
+    websiteOnline: localStorage.getItem('websiteOnline') !== 'false' // Default to online
   });
 
   // Product management state
@@ -331,6 +332,20 @@ const AdminDashboard = () => {
     const interval = setInterval(loadSecurityStats, 30000); // Update every 30 seconds
     return () => clearInterval(interval);
   }, []);
+
+  // Website status management
+  const handleWebsiteToggle = () => {
+    const newStatus = !securitySettings.websiteOnline;
+    setSecuritySettings(prev => ({
+      ...prev,
+      websiteOnline: newStatus
+    }));
+    localStorage.setItem('websiteOnline', newStatus.toString());
+    auditLogger.log('WEBSITE_STATUS_CHANGE', { 
+      message: `Website ${newStatus ? 'turned ON' : 'turned OFF'}`,
+      status: newStatus 
+    });
+  };
 
   const renderOverview = () => (
     <div className="space-y-8">
@@ -1996,6 +2011,229 @@ const AdminDashboard = () => {
           ))}
         </div>
       </div>
+
+      {/* Security Settings */}
+      <div className="bg-gradient-to-br from-gray-900/80 to-black/80 backdrop-blur-sm rounded-xl border border-gray-800 p-8">
+        <div className="flex items-center justify-between mb-8">
+          <h3 className="text-2xl font-bold text-white">Security Settings</h3>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-400 text-sm">Last Updated: {new Date().toLocaleString()}</span>
+            <button
+              onClick={() => {
+                // Save all settings
+                localStorage.setItem('securitySettings', JSON.stringify(securitySettings));
+                alert('Security settings saved successfully!');
+                auditLogger.log('SECURITY_SETTINGS_SAVED', { message: 'Security settings updated' });
+              }}
+              className="px-6 py-3 bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/30 rounded-xl transition-all duration-300"
+            >
+              Save Settings
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Website Status Control */}
+          <div className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border border-purple-500/30 rounded-2xl p-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500/30 to-purple-600/30 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-white">Website Status</h4>
+                  <p className="text-gray-400 text-sm">Control website availability</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-3">
+                <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                  securitySettings.websiteOnline 
+                    ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }`}>
+                  {securitySettings.websiteOnline ? 'ONLINE' : 'OFFLINE'}
+                </span>
+                <button
+                  onClick={handleWebsiteToggle}
+                  className={`relative inline-flex h-12 w-24 items-center rounded-full transition-colors duration-300 ${
+                    securitySettings.websiteOnline 
+                      ? 'bg-green-500 hover:bg-green-600' 
+                      : 'bg-red-500 hover:bg-red-600'
+                  }`}
+                >
+                  <span className={`inline-block h-8 w-8 transform rounded-full bg-white transition-transform duration-300 ${
+                    securitySettings.websiteOnline ? 'translate-x-12' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                <p className="text-gray-300 text-sm">
+                  <strong>Current Status:</strong> {securitySettings.websiteOnline ? 'Website is online and accessible to all users' : 'Website is offline - only maintenance page is shown'}
+                </p>
+              </div>
+              <div className="bg-yellow-500/10 rounded-lg p-4 border border-yellow-500/30">
+                <p className="text-yellow-400 text-sm">
+                  <strong>⚠️ Warning:</strong> When offline, users will see a maintenance page instead of the main website.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Authentication Settings */}
+          <div className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border border-blue-500/30 rounded-2xl p-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500/30 to-blue-600/30 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-xl font-bold text-white">Authentication</h4>
+                <p className="text-gray-400 text-sm">Login security settings</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">Max Login Attempts</label>
+                <input
+                  type="number"
+                  value={securitySettings.maxLoginAttempts}
+                  onChange={(e) => setSecuritySettings(prev => ({ ...prev, maxLoginAttempts: parseInt(e.target.value) }))}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-blue-500"
+                  min="1"
+                  max="10"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">Lockout Duration (minutes)</label>
+                <input
+                  type="number"
+                  value={securitySettings.lockoutDuration}
+                  onChange={(e) => setSecuritySettings(prev => ({ ...prev, lockoutDuration: parseInt(e.target.value) }))}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-blue-500"
+                  min="5"
+                  max="60"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">Session Timeout (minutes)</label>
+                <input
+                  type="number"
+                  value={securitySettings.sessionTimeout}
+                  onChange={(e) => setSecuritySettings(prev => ({ ...prev, sessionTimeout: parseInt(e.target.value) }))}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-blue-500"
+                  min="5"
+                  max="120"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Security Features */}
+          <div className="bg-gradient-to-br from-green-500/10 to-green-600/10 border border-green-500/30 rounded-2xl p-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500/30 to-green-600/30 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-xl font-bold text-white">Security Features</h4>
+                <p className="text-gray-400 text-sm">Enable/disable security features</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white font-medium">Audit Logging</p>
+                  <p className="text-gray-400 text-sm">Log all security events</p>
+                </div>
+                <button
+                  onClick={() => setSecuritySettings(prev => ({ ...prev, auditLogging: !prev.auditLogging }))}
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 ${
+                    securitySettings.auditLogging ? 'bg-green-500' : 'bg-gray-600'
+                  }`}
+                >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                    securitySettings.auditLogging ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white font-medium">Rate Limiting</p>
+                  <p className="text-gray-400 text-sm">Prevent brute force attacks</p>
+                </div>
+                <button
+                  onClick={() => setSecuritySettings(prev => ({ ...prev, rateLimiting: !prev.rateLimiting }))}
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 ${
+                    securitySettings.rateLimiting ? 'bg-green-500' : 'bg-gray-600'
+                  }`}
+                >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                    securitySettings.rateLimiting ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white font-medium">Account Lockout</p>
+                  <p className="text-gray-400 text-sm">Lock accounts after failed attempts</p>
+                </div>
+                <button
+                  onClick={() => setSecuritySettings(prev => ({ ...prev, accountLockout: !prev.accountLockout }))}
+                  className={`relative inline-flex h-6 w-12 items-center rounded-full transition-colors duration-300 ${
+                    securitySettings.accountLockout ? 'bg-green-500' : 'bg-gray-600'
+                  }`}
+                >
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
+                    securitySettings.accountLockout ? 'translate-x-6' : 'translate-x-1'
+                  }`} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Security PIN */}
+          <div className="bg-gradient-to-br from-orange-500/10 to-orange-600/10 border border-orange-500/30 rounded-2xl p-8">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500/30 to-orange-600/30 rounded-xl flex items-center justify-center">
+                <svg className="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h4 className="text-xl font-bold text-white">Security PIN</h4>
+                <p className="text-gray-400 text-sm">6-digit PIN for security access</p>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-gray-300 text-sm font-medium mb-2">Security PIN</label>
+                <input
+                  type="password"
+                  value={securitySettings.securityPin}
+                  onChange={(e) => setSecuritySettings(prev => ({ ...prev, securityPin: e.target.value }))}
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-orange-500"
+                  placeholder="Enter 6-digit PIN"
+                  maxLength={6}
+                />
+              </div>
+              <div className="bg-orange-500/10 rounded-lg p-4 border border-orange-500/30">
+                <p className="text-orange-400 text-sm">
+                  <strong>🔒 Important:</strong> This PIN is required to access the Security tab. Keep it secure!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Security Events */}
     </div>
   );
 
