@@ -11,6 +11,10 @@ import LostQ from './pages/LostQ/LostQ';
 import YesPage from './pages/Home/YesPage/YesPage';
 import Login from './pages/Login/Login';
 import Signup from './pages/Signup/Signup';
+import AdminLogin from './pages/Admin/AdminLogin';
+import AdminDashboard from './pages/Admin/AdminDashboard';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AdminProvider } from './context/AdminContext';
 import { Navigate } from 'react-router-dom';
 
 // Context to control header logo visibility
@@ -47,6 +51,25 @@ function AppRoutes() {
   const answer = localStorage.getItem('lostq-answered');
   const isNo = answer === 'no';
   const isYes = answer === 'yes';
+  
+  // Admin routes don't need the LostQ logic
+  if (location.pathname.startsWith('/admin')) {
+    return (
+      <Routes>
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+      </Routes>
+    );
+  }
+  
   // If not answered, always redirect to / (LostQ) except /noture and /login
   if (!answer && location.pathname !== '/' && location.pathname !== '/noture' && location.pathname !== '/login' && location.pathname !== '/signup') {
     return <Navigate to="/" replace />;
@@ -76,13 +99,15 @@ function AppRoutes() {
 function App() {
   const [hideLogo, setHideLogo] = useState(false);
   return (
-    <CartProvider>
-      <LogoAnimationContext.Provider value={{ hideLogo, setHideLogo }}>
-        <Router>
-          <AppRoutes />
-        </Router>
-      </LogoAnimationContext.Provider>
-    </CartProvider>
+    <AdminProvider>
+      <CartProvider>
+        <LogoAnimationContext.Provider value={{ hideLogo, setHideLogo }}>
+          <Router>
+            <AppRoutes />
+          </Router>
+        </LogoAnimationContext.Provider>
+      </CartProvider>
+    </AdminProvider>
   );
 }
 

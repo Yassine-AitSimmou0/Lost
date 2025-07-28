@@ -38,7 +38,7 @@ const Login = () => {
     
     // Show suggestions if user types @ and domain
     if (value.includes('@')) {
-      const [localPart, domain] = value.split('@');
+      const domain = value.split('@')[1];
       if (domain && domain.length > 0) {
         setShowEmailSuggestions(true);
       } else {
@@ -190,9 +190,9 @@ const Login = () => {
                   Remember me
                 </span>
               </label>
-              <a href="#" className="text-sm text-white hover:text-gray-300 transition-colors duration-300">
+              <button type="button" className="text-sm text-white hover:text-gray-300 transition-colors duration-300">
                 Forgot password?
-              </a>
+              </button>
             </div>
 
             {/* Captcha Section */}
