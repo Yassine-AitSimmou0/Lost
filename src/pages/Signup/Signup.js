@@ -96,115 +96,115 @@ const Signup = () => {
           </div>
 
           {/* Error Message */}
-          {errors.general && (
+        {errors.general && (
             <div className="mb-6 p-4 bg-white/10 border border-white/20 rounded-xl text-white text-center">
-              {errors.general}
-            </div>
-          )}
-
+            {errors.general}
+          </div>
+        )}
+        
           {/* Signup Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="username" className="block text-white font-semibold mb-2">
                 Username
               </label>
-              <input
-                type="text"
+          <input
+            type="text"
                 id="username"
-                name="username"
+            name="username"
                 placeholder="Enter your username"
-                value={form.username}
-                onChange={handleChange}
-                required
+            value={form.username}
+            onChange={handleChange}
+            required
                 className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 ${
                   errors.username 
                     ? 'border-white/40' 
                     : 'border-white/20 focus:border-white/40'
                 }`}
-                autoComplete="username"
-              />
-              {errors.username && (
+            autoComplete="username"
+          />
+          {errors.username && (
                 <p className="text-white/80 text-sm mt-1">{errors.username}</p>
-              )}
-            </div>
-
+          )}
+        </div>
+        
             <div>
               <label htmlFor="email" className="block text-white font-semibold mb-2">
                 Email Address
               </label>
-              <input
-                type="email"
+          <input
+            type="email"
                 id="email"
-                name="email"
+            name="email"
                 placeholder="Enter your email"
-                value={form.email}
-                onChange={handleChange}
-                required
+            value={form.email}
+            onChange={handleChange}
+            required
                 className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 ${
                   errors.email 
                     ? 'border-white/40' 
                     : 'border-white/20 focus:border-white/40'
                 }`}
-                autoComplete="email"
-              />
-              {errors.email && (
+            autoComplete="email"
+          />
+          {errors.email && (
                 <p className="text-white/80 text-sm mt-1">{errors.email}</p>
-              )}
-            </div>
-
+          )}
+        </div>
+        
             <div>
               <label htmlFor="password" className="block text-white font-semibold mb-2">
                 Password
               </label>
-              <input
-                type="password"
+          <input
+            type="password"
                 id="password"
-                name="password"
+            name="password"
                 placeholder="Create a password"
-                value={form.password}
-                onChange={handleChange}
-                required
+            value={form.password}
+            onChange={handleChange}
+            required
                 className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 ${
                   errors.password 
                     ? 'border-white/40' 
                     : 'border-white/20 focus:border-white/40'
                 }`}
-                autoComplete="new-password"
-              />
-              {errors.password && (
+            autoComplete="new-password"
+          />
+          {errors.password && (
                 <p className="text-white/80 text-sm mt-1">{errors.password}</p>
-              )}
-            </div>
-
+          )}
+        </div>
+        
             <div>
               <label htmlFor="confirmPassword" className="block text-white font-semibold mb-2">
                 Confirm Password
               </label>
-              <input
-                type="password"
+          <input
+            type="password"
                 id="confirmPassword"
-                name="confirmPassword"
+            name="confirmPassword"
                 placeholder="Confirm your password"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                required
+            value={form.confirmPassword}
+            onChange={handleChange}
+            required
                 className={`w-full px-4 py-3 bg-white/10 border rounded-xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 ${
                   errors.confirmPassword 
                     ? 'border-white/40' 
                     : 'border-white/20 focus:border-white/40'
                 }`}
-                autoComplete="new-password"
-              />
-              {errors.confirmPassword && (
+            autoComplete="new-password"
+          />
+          {errors.confirmPassword && (
                 <p className="text-white/80 text-sm mt-1">{errors.confirmPassword}</p>
-              )}
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading}
+          )}
+        </div>
+        
+        <button 
+          type="submit"
+          disabled={isLoading}
               className="w-full px-6 py-3 bg-white hover:bg-gray-100 text-black font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed"
-            >
+        >
               {isLoading ? (
                 <div className="flex items-center justify-center">
                   <svg className="w-5 h-5 animate-spin mr-2" fill="none" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@ const Signup = () => {
               ) : (
                 'Create Account'
               )}
-            </button>
+        </button>
           </form>
 
           {/* Divider */}
@@ -246,13 +246,13 @@ const Signup = () => {
           <div className="text-center mt-8">
             <p className="text-gray-400">
               Already have an account?{' '}
-              <button
-                type="button"
-                onClick={() => window.history.back()}
+          <button 
+            type="button" 
+            onClick={() => window.history.back()}
                 className="text-white hover:text-gray-300 font-semibold transition-colors duration-300"
-              >
-                Sign In
-              </button>
+          >
+            Sign In
+          </button>
             </p>
           </div>
         </div>

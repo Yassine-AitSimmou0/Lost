@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 
 import Header from './pages/layout/Header';
 import Footer from './pages/layout/Footer';
@@ -16,6 +17,7 @@ import AdminDashboard from './pages/Admin/AdminDashboard';
 import MaintenancePage from './pages/Maintenance/MaintenancePage';
 import ProtectedRoute from './components/ProtectedRoute';
 import { AdminProvider } from './context/AdminContext';
+import { registerServiceWorker, monitorPerformance } from './utils/performance';
 
 // Context to control header logo visibility
 export const LogoAnimationContext = createContext({ hideLogo: false, setHideLogo: () => {} });
@@ -50,7 +52,6 @@ function AppRoutes() {
   const { hideLogo } = useContext(LogoAnimationContext);
   const answer = localStorage.getItem('lostq-answered');
   const isNo = answer === 'no';
-  const isYes = answer === 'yes';
   
   // Check website status from localStorage
   const websiteOnline = localStorage.getItem('websiteOnline') !== 'false'; // Default to online
@@ -106,16 +107,25 @@ function AppRoutes() {
 
 function App() {
   const [hideLogo, setHideLogo] = useState(false);
+  
+  // Register service worker and performance monitoring
+  useEffect(() => {
+    registerServiceWorker();
+    monitorPerformance();
+  }, []);
+  
   return (
-    <AdminProvider>
-      <CartProvider>
-        <LogoAnimationContext.Provider value={{ hideLogo, setHideLogo }}>
-          <Router>
-            <AppRoutes />
-          </Router>
-        </LogoAnimationContext.Provider>
-      </CartProvider>
-    </AdminProvider>
+    <HelmetProvider>
+      <AdminProvider>
+        <CartProvider>
+          <LogoAnimationContext.Provider value={{ hideLogo, setHideLogo }}>
+            <Router>
+              <AppRoutes />
+            </Router>
+          </LogoAnimationContext.Provider>
+        </CartProvider>
+      </AdminProvider>
+    </HelmetProvider>
   );
 }
 
