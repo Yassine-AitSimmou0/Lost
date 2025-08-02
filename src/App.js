@@ -28,14 +28,126 @@ function CartProvider({ children }) {
       return [];
     }
   });
-  const addToCart = (product) => setCart((prev) => [...prev, product]);
+
+  const [savedItems, setSavedItems] = useState(() => {
+    try {
+      const stored = localStorage.getItem('savedItems');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Add to cart with quantity support
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const existingItem = prev.find(item => item.id === product.id);
+      if (existingItem) {
+        return prev.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...product, quantity: 1 }];
+    });
+  };
+
+  // Update quantity of a specific item
+  const updateQuantity = (id, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeFromCart(id);
+      return;
+    }
+    setCart((prev) => 
+      prev.map(item =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  // Remove item completely from cart
   const removeFromCart = (id) => setCart((prev) => prev.filter(p => p.id !== id));
-  // Persist cart to localStorage
+
+  // Clear entire cart
+  const clearCart = () => setCart([]);
+
+  // Save item for later (move from cart to saved items)
+  const saveForLater = (id) => {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+      setSavedItems(prev => {
+        const existingItem = prev.find(savedItem => savedItem.id === id);
+        if (existingItem) {
+          return prev; // Item already saved
+        }
+        return [...prev, { ...item, quantity: 1 }]; // Reset quantity to 1 for saved items
+      });
+      removeFromCart(id);
+    }
+  };
+
+  // Move item from saved to cart
+  const moveToCart = (id) => {
+    const item = savedItems.find(item => item.id === id);
+    if (item) {
+      addToCart(item);
+      setSavedItems(prev => prev.filter(item => item.id !== id));
+    }
+  };
+
+  // Remove item from saved items
+  const removeFromSaved = (id) => {
+    setSavedItems(prev => prev.filter(item => item.id !== id));
+  };
+
+  // Clear all saved items
+  const clearSavedItems = () => setSavedItems([]);
+
+  // Calculate cart totals
+  const getCartTotals = () => {
+    const subtotal = cart.reduce((total, item) => {
+      const price = item.price || 0;
+      const quantity = item.quantity || 1;
+      return total + (price * quantity);
+    }, 0);
+    
+    const tax = subtotal * 0.08; // 8% tax rate
+    const shipping = subtotal > 50 ? 0 : 5.99; // Free shipping over $50
+    const total = subtotal + tax + shipping;
+    
+    return {
+      subtotal: parseFloat(subtotal.toFixed(2)),
+      tax: parseFloat(tax.toFixed(2)),
+      shipping: parseFloat(shipping.toFixed(2)),
+      total: parseFloat(total.toFixed(2)),
+      itemCount: cart.reduce((count, item) => count + (item.quantity || 1), 0)
+    };
+  };
+
+  // Persist cart and saved items to localStorage
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
+
+  useEffect(() => {
+    localStorage.setItem('savedItems', JSON.stringify(savedItems));
+  }, [savedItems]);
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ 
+      cart, 
+      savedItems,
+      addToCart, 
+      removeFromCart, 
+      updateQuantity,
+      clearCart,
+      saveForLater,
+      moveToCart,
+      removeFromSaved,
+      clearSavedItems,
+      getCartTotals
+    }}>
       {children}
     </CartContext.Provider>
   );
